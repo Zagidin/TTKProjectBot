@@ -19,17 +19,23 @@ ___
 ---
 
 ```shell
- pip install aiogram==2.23.1
+pip install -r requirements.txt
 ```
-```shell
- pip install python-dotenv
-```
-```shell
- pip install pyaudio
-```
-```shell
- pip install pydub
-```
+
+---
+
+---
+
+## Перед запуском, из папки `text_recognition_library` извлечь архив в корневую папку:
+> WIN + R
+> 
+> sysdm.cpl
+#### В появившемся окне перейти по:
+> + Дополнительно 
+> + переменные среды 
+> + PATH 
+> + Изменить 
+> + Создать `(Ввести ссылку на папку которую извекли из архива)`
 
 ---
 

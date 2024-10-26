@@ -1,0 +1,19 @@
+# #     # contract_number = "516"
+# #     # for _ in range(7):
+# #     #     with SessionLocal() as session:
+# #     #         exists = session.query(Client).filter(Client.contract == contract_number).first()
+# #     #         if not exists:
+# #     #             contract_number += str(randint(0, 9))
+# #     #
+# #     # new_client = Client(contract=contract_number, phone=data['phone'],
+# #     #                     address=data['address'], service=data['service'])
+# #     #
+# #     # with SessionLocal() as session:
+# #     #     session.add(new_client)
+# #     #     session.commit()
+# #     #
+# #     # await message.answer(
+# #     #     text="Данные успешно переданы ✅"
+# #     #          "\nCкоро с Вами свяжутся специалисты 🤳",
+# #     #     reply_markup=start_keyboard
+# #     # )
