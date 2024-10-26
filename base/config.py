@@ -1,3 +1,5 @@
+from enum import unique
+from operator import index
 from os import getenv
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, Column, String, Integer
@@ -20,5 +22,14 @@ class Client(Base):
     address = Column(String(255))
     service = Column(String(45))
     intent = Column(String(550))
+
+
+class People(Base):
+    __tablename__ = 'peoples'
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(String(25))
+    role = Column(String(55))
+    password = Column(String(10))
 
 Base.metadata.create_all(bind=engine)
