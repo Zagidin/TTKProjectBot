@@ -105,8 +105,11 @@ async def user_provider_service(message: Message, state: FSMContext):
                         data['intent'] = found_descriptions
 
                 else:
-                    await message.answer(f"К сожалению я Вас не понял, попробуйте повторно "
-                                         f"записать голосовое сообщение или напишите текстом 😟")
+                    await message.answer(
+                        f"К сожалению я Вас не понял, попробуйте повторно "
+                        f"записать голосовое сообщение или напишите текстом 😟"
+                        f"\nЧтобы отменить операцию введите /cancel"
+                    )
                     await state.finish()
             except sr.UnknownValueError:
                 await message.answer(
@@ -153,7 +156,11 @@ async def user_provider_service_text(message: Message, state: FSMContext):
 
         await UserRegistration.next()
     else:
-        await message.answer(f"К сожалению, я Вас не понял. Попробуйте написать текстом или используйте голосовое сообщение 😟")
+        await message.answer(
+            f"К сожалению, я Вас не понял. "
+            f"Попробуйте написать текстом или используйте голосовое сообщение 😟\n"
+            f"\nЧтобы отменить операцию введите /cancel"
+        )
         await state.finish()
 
 
@@ -193,10 +200,15 @@ async def yes_user_otvet(message: Message, state: FSMContext):
 
 @dp.message_handler(text="Нет", state=UserRegistration.intent)
 async def no_user_otvet(message: Message, state: FSMContext):
+    await state.finish()
     await message.answer(
             text="Пожалуйста, Если возникла проблема, напишите "
                  "текстовое сообщение, которое отправится администратору",
             reply_markup=start_keyboard
-        )
+    )
 
+
+@dp.message_handler(commands='cancel', state='*')
+async def cancel_command(message: Message, state: FSMContext):
     await state.finish()
+    await message.answer("Операция отменена.")

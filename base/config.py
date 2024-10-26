@@ -29,6 +29,7 @@ class People(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(String(25))
+    login = Column(String(50))
     role = Column(String(55))
     password = Column(String(10))
 
