@@ -4,25 +4,13 @@ from bot.bot import dp
 from pydub import AudioSegment
 import speech_recognition as sr
 from aiogram.dispatcher import FSMContext
+from text_file_download import my_list_str
+from base.config import SessionLocal, Client
 from status_machine.user import UserRegistration
+from keyboards.reply_key.user.yes_no import yes_no
+from keyboards.reply_key.user.sign_user import start_keyboard
 from aiogram.types import Message, ReplyKeyboardRemove, ContentType
 
-
-my_list_str = {
-    "тарифы": {
-        "триггеры": ["максимальный", "мощный", "честный", "изменение тарифа", "тариф", "сменить тариф", "смена тарифа"],
-        "описание": "Запрос информации или изменения тарифного плана."
-    },
-    "услуги": {
-        "триггеры": ["антивирус", "касперский", "выделенный ip", "ip", "IP", "персональный менеджер", "менеджер",
-                     "фирменный роутер", "роутер", "подключить услугу", "услуга", "добавить услугу"],
-        "описание": "Запрос подключения или информации по дополнительным услугам."
-    },
-    "договор": {
-        "триггеры": ["заключить договор", "оформить договор", "расторгнуть договор", "договор"],
-        "описание": "Запрос на заключение, расторжение или изменение договора."
-    }
-}
 
 morph = pymorphy2.MorphAnalyzer()
 
@@ -99,23 +87,71 @@ async def user_provider_service(message: Message, state: FSMContext):
 
                 # Проверяем наличие триггеров и выводим описание
                 found_descriptions = []
+                key_list = []
                 for key, value in my_list_str.items():
                     if any(trigger in lemmatized_text for trigger in value["триггеры"]):
                         found_descriptions.append(f"{value['описание']}")
+                        key_list.append(key)
 
                 if found_descriptions:
                     await message.answer(
-                        text="Правильно ли я Вас понял?\nСреди ваших запросов есть: "
+                        text="Правильно ли я Вас понял?\nСреди ваших запросов есть: ",
+                        reply_markup=yes_no
                     )
                     await message.answer("\t" + "\n".join(found_descriptions))
+
+                    async with state.proxy() as data:
+                        data['service'] = key_list
+                        data['intent'] = found_descriptions
+
                 else:
                     await message.answer(f"К сожалению я Вас не понял, попробуйте повторно "
                                          f"записать голосовое сообщение или напишите текстом 😟")
+                    await state.finish()
             except sr.UnknownValueError:
-                await message.answer("Не удалось распознать речь.")
+                await message.answer(
+                    "Не удалось распознать речь.",
+                )
+                await state.finish()
             except sr.RequestError as e:
-                await message.answer(f"Ошибка сервиса: {e}")
+                await message.answer(
+                    f"Ошибка сервиса: {e}",
+                )
+                await state.finish()
     else:
-        await message.answer("FFmpeg не найден. Пожалуйста, установите FFmpeg.")
+        await message.answer(
+            "FFmpeg не найден. Пожалуйста, установите FFmpeg.",
+        )
+        await state.finish()
 
-    await state.finish()
+    await UserRegistration.next()
+
+
+@dp.message_handler(text="Да", state=UserRegistration.intent)
+async def yes_user_otvet(message: Message, state: FSMContext):
+    async with state.proxy() as data:
+        service = ', '.join(data['service'])
+        intent = ', '.join(data['intent'])
+
+        await state.finish()
+
+        await message.answer(
+            text="Данные успешно переданы ✅"
+                 "\nСкоро с Вами свяжутся специалисты 🤳",
+            reply_markup=start_keyboard
+        )
+
+        with SessionLocal() as session:
+            max_contract = session.query(Client.contract).order_by(Client.contract.desc()).first()
+            if max_contract:
+                contract_number = str(int(max_contract[0]) + 1)
+            else:
+                contract_number = "516111111"
+
+        new_client = Client(contract=contract_number, phone=data['phone'],
+                            address=data['address'], service=service,
+                            intent=intent)
+
+        with SessionLocal() as session:
+            session.add(new_client)
+            session.commit()

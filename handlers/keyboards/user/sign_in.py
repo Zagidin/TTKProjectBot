@@ -1,9 +1,9 @@
-import re
 from bot.bot import dp
 from aiogram.types import Message
 from status_machine.user import User
 from aiogram.dispatcher import FSMContext
 from base.config import SessionLocal, Client
+from keyboards.reply_key.user.sign_user import start_keyboard
 
 
 @dp.message_handler(text="Войти как клиент ТТК")
@@ -22,15 +22,21 @@ async def contract_input(message: Message, state: FSMContext):
 
     await state.finish()
 
-    contract_number = message.text.strip()
+    contract_number = message.text
 
-    if re.match(r"^516\d{7}$", contract_number):
+    if contract_number:
         with SessionLocal() as session:
             client = session.query(Client).filter(Client.contract == contract_number).first()
             if client:
                 await message.answer(
-                    f"Добро пожаловать! Ваш контактный номер: {client.contact_number}, адрес: {client.address}.")
+                    f"Добро пожаловать! Ваш контактный номер: {client.phone}, адрес: {client.address}.")
             else:
-                await message.answer("Номер договора не найден.")
+                await message.answer(
+                    text="Номер договора не найден.\nПопробуйте войти ещё раз!",
+                    reply_markup=start_keyboard
+                )
     else:
-        await message.answer("Неверный формат номера договора.")
+        await message.answer(
+            text="Неверный формат номера договора.\nВведите свой номер договора выданный администратором 🎫",
+            reply_markup=start_keyboard
+        )

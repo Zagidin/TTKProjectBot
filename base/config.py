@@ -19,5 +19,6 @@ class Client(Base):
     phone = Column(String(15))
     address = Column(String(255))
     service = Column(String(45))
+    intent = Column(String(550))
 
 Base.metadata.create_all(bind=engine)
