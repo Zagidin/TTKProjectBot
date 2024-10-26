@@ -15,15 +15,9 @@ class Client(Base):
     __tablename__ = 'clients'
 
     id = Column(Integer, primary_key=True, index=True)
-    contract_number = Column(String(9), unique=True)
-    contact_number = Column(String(15))
+    contract = Column(String(9), unique=True)
+    phone = Column(String(15))
     address = Column(String(255))
-
-class User(Base):
-    __tablename__ = 'users'
-
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String(80), unique=True)
-    password_hash = Column(String(120))
+    service = Column(String(45))
 
 Base.metadata.create_all(bind=engine)
