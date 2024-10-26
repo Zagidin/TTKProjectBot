@@ -98,7 +98,7 @@ async def user_provider_service(message: Message, state: FSMContext):
                         text="Правильно ли я Вас понял?\nСреди ваших запросов есть: ",
                         reply_markup=yes_no
                     )
-                    await message.answer("\t" + "\n".join(found_descriptions))
+                    await message.answer("\n".join(found_descriptions))
 
                     async with state.proxy() as data:
                         data['service'] = key_list
@@ -127,6 +127,36 @@ async def user_provider_service(message: Message, state: FSMContext):
     await UserRegistration.next()
 
 
+@dp.message_handler(content_types=ContentType.TEXT, state=UserRegistration.service)
+async def user_provider_service_text(message: Message, state: FSMContext):
+    user_text = message.text
+
+    input_lemmatized_text = ' '.join([morph.parse(word)[0].normal_form for word in user_text.split()])
+
+    found_descriptions = []
+    key_list = []
+    for key, value in my_list_str.items():
+        if any(trigger in input_lemmatized_text for trigger in value["триггеры"]):
+            found_descriptions.append(f"{value['описание']}")
+            key_list.append(key)
+
+    if found_descriptions:
+        await message.answer(
+            text="Правильно ли я Вас понял?\nСреди ваших запросов есть: ",
+            reply_markup=yes_no
+        )
+        await message.answer("\n".join(found_descriptions))
+
+        async with state.proxy() as data:
+            data['service'] = key_list
+            data['intent'] = found_descriptions
+
+        await UserRegistration.next()
+    else:
+        await message.answer(f"К сожалению, я Вас не понял. Попробуйте написать текстом или используйте голосовое сообщение 😟")
+        await state.finish()
+
+
 @dp.message_handler(text="Да", state=UserRegistration.intent)
 async def yes_user_otvet(message: Message, state: FSMContext):
     async with state.proxy() as data:
@@ -148,9 +178,13 @@ async def yes_user_otvet(message: Message, state: FSMContext):
             else:
                 contract_number = "516111111"
 
-        new_client = Client(contract=contract_number, phone=data['phone'],
-                            address=data['address'], service=service,
-                            intent=intent)
+        new_client = Client(
+            contract=contract_number,
+            phone=data['phone'],
+            address=data['address'],
+            service=service,
+            intent=intent
+        )
 
         with SessionLocal() as session:
             session.add(new_client)
