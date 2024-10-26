@@ -155,3 +155,14 @@ async def yes_user_otvet(message: Message, state: FSMContext):
         with SessionLocal() as session:
             session.add(new_client)
             session.commit()
+
+
+@dp.message_handler(text="Нет", state=UserRegistration.intent)
+async def no_user_otvet(message: Message, state: FSMContext):
+    await message.answer(
+            text="Пожалуйста, Если возникла проблема, напишите "
+                 "текстовое сообщение, которое отправится администратору",
+            reply_markup=start_keyboard
+        )
+
+    await state.finish()
