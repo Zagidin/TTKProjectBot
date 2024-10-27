@@ -43,7 +43,7 @@ async def process_password(message: Message, state: FSMContext):
 
         if user and user.password == password:
             await state.finish()
-            role_user = user.role  # Получаем роль пользователя
+            role_user = user.role
 
             if role_user == 'Admin':
                 await message.answer(
