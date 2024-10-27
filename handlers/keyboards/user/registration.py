@@ -108,7 +108,8 @@ async def user_provider_service(message: Message, state: FSMContext):
                     await message.answer(
                         f"К сожалению я Вас не понял, попробуйте повторно "
                         f"записать голосовое сообщение или напишите текстом 😟"
-                        f"\nЧтобы отменить операцию введите /cancel"
+                        f"\nЧтобы отменить операцию введите /cancel",
+                        reply_markup=start_keyboard
                     )
                     await state.finish()
             except sr.UnknownValueError:
@@ -159,7 +160,8 @@ async def user_provider_service_text(message: Message, state: FSMContext):
         await message.answer(
             f"К сожалению, я Вас не понял. "
             f"Попробуйте написать текстом или используйте голосовое сообщение 😟\n"
-            f"\nЧтобы отменить операцию введите /cancel"
+            f"\nЧтобы отменить операцию введите /cancel",
+            reply_markup=start_keyboard
         )
         await state.finish()
 
