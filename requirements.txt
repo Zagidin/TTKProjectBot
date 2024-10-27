@@ -2,5 +2,7 @@ SpeechRecognition
 aiogram==2.23.1
 python-dotenv
 sqlalchemy
+requests
 pyaudio
 pydub
+Flask

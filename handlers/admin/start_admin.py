@@ -1,3 +1,4 @@
+import requests
 from os import getenv
 from bot.bot import dp
 from dotenv import load_dotenv
@@ -50,6 +51,7 @@ async def process_password(message: Message, state: FSMContext):
                     text="Добро пожаловать в админ-панель! 🎉",
                     reply_markup=start_admin_panel
                 )
+
             elif role_user == 'Editor':
                 await message.answer(
                     text="Добро пожаловать в панель редактора! 🎉",

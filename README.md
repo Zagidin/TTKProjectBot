@@ -44,4 +44,5 @@ pip install -r requirements.txt
 
 > DATABASE_URL=<Подключение к БД (`ПРИМЕР`: sqlite:///./test.db)>
 
+> ADMIN_EMAIL=<Введите почту email>
 ---

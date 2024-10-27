@@ -22,6 +22,7 @@ class Client(Base):
     address = Column(String(255))
     service = Column(String(45))
     intent = Column(String(550))
+    user_text = Column(String(800))
 
 
 class People(Base):

@@ -93,6 +93,10 @@ async def user_provider_service(message: Message, state: FSMContext):
                         found_descriptions.append(f"{value['описание']}")
                         key_list.append(key)
 
+                async with state.proxy() as data:
+                    # Добавляем распознанный текст в user_text
+                    data['user_text'] = data.get('user_text', '') + ' ' + text
+
                 if found_descriptions:
                     await message.answer(
                         text="Правильно ли я Вас понял?\nСреди ваших запросов есть: ",
@@ -130,10 +134,12 @@ async def user_provider_service(message: Message, state: FSMContext):
 
     await UserRegistration.next()
 
-
 @dp.message_handler(content_types=ContentType.TEXT, state=UserRegistration.service)
 async def user_provider_service_text(message: Message, state: FSMContext):
     user_text = message.text
+
+    async with state.proxy() as data:
+        data['user_text'] = data.get('user_text', '') + ' ' + user_text
 
     input_lemmatized_text = ' '.join([morph.parse(word)[0].normal_form for word in user_text.split()])
 
@@ -192,7 +198,8 @@ async def yes_user_otvet(message: Message, state: FSMContext):
             phone=data['phone'],
             address=data['address'],
             service=service,
-            intent=intent
+            intent=intent,
+            user_text=data['user_text']
         )
 
         with SessionLocal() as session:
