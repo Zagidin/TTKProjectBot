@@ -6,12 +6,11 @@ from status_machine.admin import Admin
 from aiogram.dispatcher import FSMContext
 from base.config import SessionLocal, People
 from keyboards.reply_key.admin.start_admin_key import start_admin_panel
-
+from keyboards.reply_key.editor.start_editor_key import start_editor_panel
 
 load_dotenv()
 
 admin_email = getenv("ADMIN_EMAIL")
-
 
 @dp.message_handler(commands='admin')
 async def admin(message: Message):
@@ -19,7 +18,6 @@ async def admin(message: Message):
         text="Введите Логин 🎭"
     )
     await Admin.login.set()
-
 
 @dp.message_handler(state=Admin.login)
 async def process_login(message: Message, state: FSMContext):
@@ -33,7 +31,6 @@ async def process_login(message: Message, state: FSMContext):
     )
     await Admin.password.set()
 
-
 @dp.message_handler(state=Admin.password)
 async def process_password(message: Message, state: FSMContext):
     password = message.text
@@ -46,14 +43,23 @@ async def process_password(message: Message, state: FSMContext):
 
         if user and user.password == password:
             await state.finish()
-            await message.answer(
-                text="Добро пожаловать в админ-панель! 🎉",
-                reply_markup=start_admin_panel
-            )
+            role_user = user.role  # Получаем роль пользователя
+
+            if role_user == 'Admin':
+                await message.answer(
+                    text="Добро пожаловать в админ-панель! 🎉",
+                    reply_markup=start_admin_panel
+                )
+            elif role_user == 'Editor':
+                await message.answer(
+                    text="Добро пожаловать в панель редактора! 🎉",
+                    reply_markup=start_editor_panel
+                )
+            else:
+                await message.answer("Неизвестная роль пользователя.")
         else:
             await message.answer(
                 text="Неверный логин или пароль. Попробуйте снова."
                      "\n\nЧтобы отменить операцию введите /cancel"
             )
             await state.finish()
-
