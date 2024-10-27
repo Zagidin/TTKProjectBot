@@ -52,7 +52,8 @@ async def process_password(message: Message, state: FSMContext):
                     reply_markup=start_admin_panel
                 )
                 await message.answer(
-                    text="Выберите команду из менб кнопок 🔎"
+                    text="Выберите команду из менб кнопок 🔎\n"
+                         "\nЛибо перейдите по ссылке: http://127.0.0.1:5000/table"
                 )
 
             elif role_user == 'Editor':
