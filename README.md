@@ -44,5 +44,8 @@ pip install -r requirements.txt
 
 > DATABASE_URL=<Подключение к БД (`ПРИМЕР`: sqlite:///./test.db)>
 
+> FLASK_DATABASE=<Подключение к БД (`ПРИМЕР`: sqlite:///test_flask.db)>
+
 > ADMIN_EMAIL=<Введите почту email>
+
 ---
