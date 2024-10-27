@@ -35,8 +35,8 @@ def add_intent(contract, service, intent, phone, address, user_text):
 def send_email_to_admin(contract, service, intent, phone, address, user_text):
     """Отправляет письмо админу с информацией о новой записи."""
     admin_email = "prap0235@gmail.com"  # Адрес администратора
-    from_email = "prap0235@gmail.com"  # Ваша почта
-    password = "Zagidin05161"  # Пароль от почты
+    from_email = "fvbitteam@gmail.com"  # Ваша почта
+    password = "fkln sabt enmm gpdi"  # Пароль от почты
 
     # Формируем содержимое письма
     message = MIMEText(

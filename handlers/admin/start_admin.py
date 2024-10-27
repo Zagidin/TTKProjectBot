@@ -51,6 +51,9 @@ async def process_password(message: Message, state: FSMContext):
                     text="Добро пожаловать в админ-панель! 🎉",
                     reply_markup=start_admin_panel
                 )
+                await message.answer(
+                    text="Выберите команду из менб кнопок 🔎"
+                )
 
             elif role_user == 'Editor':
                 await message.answer(

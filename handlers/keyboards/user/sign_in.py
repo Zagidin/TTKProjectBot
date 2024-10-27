@@ -29,7 +29,7 @@ async def contract_input(message: Message, state: FSMContext):
             client = session.query(Client).filter(Client.contract == contract_number).first()
             if client:
                 await message.answer(
-                    f"Добро пожаловать! Ваш контактный номер: {client.phone}, адрес: {client.address}.")
+                    f"Добро пожаловать!\nВаш контактный номер: {client.phone}, адрес: {client.address}.")
             else:
                 await message.answer(
                     text="Номер договора не найден.\nПопробуйте войти ещё раз!",
