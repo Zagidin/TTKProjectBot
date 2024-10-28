@@ -24,4 +24,11 @@ async def all_user(message: Message):
             f"{'-' * 19}\n"
         )
 
-    await message.answer(response_text)
+    user_id = message.from_user.id
+    file_path = "handlers/keyboards/admin/all_user.txt"
+
+    with open(file_path, 'w', encoding='utf-8') as file:
+        file.write(response_text)
+
+    with open(file_path, 'rb') as file:
+        await dp.bot.send_document(chat_id=user_id, document=file)
