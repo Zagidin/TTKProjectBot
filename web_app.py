@@ -37,11 +37,11 @@ def add_intent(contract, service, intent, phone, address, user_text):
 
 def send_email_to_admin(contract, service, intent, phone, address, user_text):
     """Отправляет письмо админу с информацией о новой записи."""
-    admin_email = "prap0235@gmail.com"  # Адрес администратора
-    from_email = "fvbitteam@gmail.com"  # Ваша почта
-    password = "fkln sabt enmm gpdi"  # Пароль от почты
+    admin_email = getenv("ADMIN_EMAIL")  # Адрес администратора
+    from_email = "fvbitteam@gmail.com"  # Почта узер с которой отправка
+    password = "fkln sabt enmm gpdi"  # Пароль от почты (узер)
 
-    # Формируем содержимое письма
+    # содержимое SMS
     message = MIMEText(
         f"Номер договора: {contract}\n"
         f"Ключевое слово: {service}\n"
@@ -54,7 +54,7 @@ def send_email_to_admin(contract, service, intent, phone, address, user_text):
     message['From'] = from_email
     message['To'] = admin_email
 
-    # Отправка письма
+    # Отправка
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(from_email, password)
         server.sendmail(from_email, admin_email, message.as_string())
