@@ -85,9 +85,9 @@ def show_table():
 
 
 @app.route('/delete/<int:id>', methods=['POST'])
-def delete_intent(id_usr):
+def delete_intent(id):
     session = Session()
-    intent_to_delete = session.query(Client).filter_by(id=id_usr).first()
+    intent_to_delete = session.query(Client).filter_by(id=id).first()
     if intent_to_delete:
         session.delete(intent_to_delete)
         session.commit()
