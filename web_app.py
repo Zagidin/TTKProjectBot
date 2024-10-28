@@ -1,14 +1,17 @@
 import smtplib
+from os import getenv
+from dotenv import load_dotenv
 from email.mime.text import MIMEText
 from flask import Flask, render_template, redirect, url_for, request
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from base.config import Client, Base  # Модель Client с полем user_text
+from base.config import Client, Base
+
+load_dotenv()
 
 app = Flask(__name__)
 
-# Настройка базы данных
-engine = create_engine("sqlite:///keywords.db")
+engine = create_engine(getenv("DATABASE_URL"))
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 
@@ -40,8 +43,12 @@ def send_email_to_admin(contract, service, intent, phone, address, user_text):
 
     # Формируем содержимое письма
     message = MIMEText(
-        f"Номер договора: {contract}\nКлючевое слово: {service}\nНамерение: {intent}\n"
-        f"Телефон: {phone}\nEmail: {address}\nОписание: {user_text}"
+        f"Номер договора: {contract}\n"
+        f"Ключевое слово: {service}\n"
+        f"Намерение: {intent}\n"
+        f"Телефон: {phone}\n"
+        f"Email: {address}\n"
+        f"Описание: {user_text}"
     )
     message['Subject'] = "Новая запись в системе"
     message['From'] = from_email
@@ -78,9 +85,9 @@ def show_table():
 
 
 @app.route('/delete/<int:id>', methods=['POST'])
-def delete_intent(id):
+def delete_intent(id_usr):
     session = Session()
-    intent_to_delete = session.query(Client).filter_by(id=id).first()
+    intent_to_delete = session.query(Client).filter_by(id=id_usr).first()
     if intent_to_delete:
         session.delete(intent_to_delete)
         session.commit()
