@@ -11,17 +11,21 @@ async def all_user(message: Message):
     if not clients:
         await message.answer("Нет зарегистрированных пользователей.")
         return
+    else:
+        await message.answer("Вот файл со всеми пользователями 🔖")
 
     response_text = "Список пользователей:\n\n"
 
     for client in clients:
         response_text += (
-            f"Номер договора: {client.contract}\n"
-            f"Контактный номер: {client.phone}\n"
-            f"Адрес: {client.address}\n"
-            f"Услуга: {client.service}\n"
-            f"Цель: {client.intent}\n"
-            f"{'-' * 19}\n"
+            f"{'#' * 90}\n"
+            f"🎟 Номер договора: {client.contract}\n"
+            f"📞 Контактный номер: {client.phone}\n"
+            f"🏡 Адрес: {client.address}\n"
+            f"🎫 Услуга: {client.service}\n"
+            f"🛒 Цель: {client.intent}\n"
+            f"👤 Описание: {client.user_text}\n"
+            f"{'-' * 90}\n"
         )
 
     user_id = message.from_user.id
