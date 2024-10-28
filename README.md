@@ -1,6 +1,14 @@
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?color=%&lines=ZAGA+|+VOVCHIK)✨ Developers 🎉](https://git.io/typing-svg)
+
+----
+
 # Бот ТТК
+
+[![Python Version](https://img.shields.io/badge/Python-3.10-green)](https://www.python.org/downloads/release/python-3100/) [![Aiogram Version](https://img.shields.io/badge/Aiogram-2.23.1-red)](https://piwheels.org/project/aiogram/)
+
+
 ___
-### Запуск **Бота**
+### Запуск *Бота*
 ___
 #### Windows
 
