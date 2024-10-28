@@ -1,4 +1,4 @@
-[![Typing SVG](https://readme-typing-svg.herokuapp.com?color=%&lines=ZAGA+|+VOVCHIK)✨ Developers 🎉](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?color=%&lines=ZAGA+|+VOVCHIK)✨ Developers 🎉](https://github.com/MrDormant)
 
 ----
 
